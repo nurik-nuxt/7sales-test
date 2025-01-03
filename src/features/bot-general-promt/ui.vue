@@ -19,6 +19,7 @@ import Dialog from 'primevue/dialog';
 import { useAmoCrmStore } from '~/src/shared/store/amocrm';
 import { useBitrix24 } from '~/src/shared/store/bitrix24';
 import { useUploadFileStore } from '~/src/shared/store/upload';
+import { useGoogleSheetStore } from "~/src/shared/store/googleSheet";
 import BaseFile from '~/src/shared/components/base/BaseFile.vue';
 
 // Define props
@@ -42,6 +43,7 @@ const route = useRoute();
 const amoCrmStore = useAmoCrmStore();
 const bitrix24Store = useBitrix24();
 const uploadFileStore = useUploadFileStore();
+const googleSheetStore = useGoogleSheetStore();
 
 const showFunctionDeleteModal = ref<boolean>(false);
 const showFileDeleteModal = ref<boolean>(false);
@@ -266,16 +268,16 @@ const getDealNoteText = (index: number) => {
   });
 };
 
-function getCodeByFieldId(list, fieldId) {
-  for (const group of list) {
-    const items = group?.items || [];
-    const field = items.find(item => item.id === fieldId);
-    if (field) {
-      return field?.code || null; // Return the code or null if not available
-    }
-  }
-  return null; // Return null if the fieldId is not found
-}
+// function getCodeByFieldId(list, fieldId) {
+//   for (const group of list) {
+//     const items = group?.items || [];
+//     const field = items.find(item => item.id === fieldId);
+//     if (field) {
+//       return field?.code || null; // Return the code or null if not available
+//     }
+//   }
+//   return null; // Return null if the fieldId is not found
+// }
 
 const getFieldId = (functionIndex, customFieldIndex) => {
   return computed({
@@ -553,6 +555,140 @@ const deleteFunctionSendFile = (file: any, functionIndex: number, fileIndex: num
 
 // Methods to get and set values in actions
 
+// Google Sheet Link
+const getGoogleSheetLink = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+      return action?.parameters?.sheet_link || ''; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+
+      if (!action) {
+        action = { name: 'google_sheet', parameters: { sheet_link: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.sheet_link = value;
+      }
+    },
+  });
+};
+
+// Google Sheet Tab
+const getGoogleSheetTab = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+      return action?.parameters?.sheet_tab || ''; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+
+      if (!action) {
+        action = { name: 'google_sheet', parameters: { sheet_tab: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.sheet_tab = value;
+      }
+    },
+  });
+};
+
+// Google Sheet Tabs
+const getGoogleSheetTabs = (index: number) => {
+  return computed({
+    get() {
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+      return action?.parameters?.sheet_tabs || [];
+    },
+    set(value: SheetList[]) {
+      if (!props.botFunctions[index]?.actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+
+      if (!action) {
+        action = {
+          name: 'google_sheet',
+          parameters: { sheet_tabs: value },
+        };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.sheet_tabs = value;
+      }
+    },
+  });
+};
+
+// Google Sheet Columns
+const getGoogleSheetColumns = (index: number) => {
+  return computed({
+    get() {
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+      return action?.parameters?.sheet_columns || [];
+    },
+    set(value: SheetList[]) {
+      if (!props.botFunctions[index]?.actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_sheet'
+      );
+
+      if (!action) {
+        action = {
+          name: 'google_sheet',
+          parameters: { sheet_columns: value },
+        };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.sheet_columns = value;
+      }
+    },
+  });
+};
+
 // Notify Operator Text
 const getNotifyOperatorText = (index: number) => {
   return computed({
@@ -585,66 +721,66 @@ const getNotifyOperatorText = (index: number) => {
 };
 
 // Webhook URL
-const getWebhookUrl = (index: number) => {
-  return computed({
-    get() {
-      const action = props.botFunctions[index]?.actions?.find(
-          (action: any) => action.name === 'send_webhook'
-      );
-      return action?.parameters?.webhook_url || '';
-    },
-    set(value: string) {
-      // Ensure the actions array exists
-      if (!props.botFunctions[index].actions) {
-        props.botFunctions[index].actions = [];
-      }
-
-      let action = props.botFunctions[index].actions.find(
-          (action: any) => action.name === 'send_webhook'
-      );
-
-      if (!action) {
-        // Create the action if it doesn't exist
-        action = { name: 'send_webhook', parameters: { webhook_url: value, webhook_text: '' } };
-        props.botFunctions[index].actions.push(action);
-      } else {
-        // Update the existing action
-        action.parameters.webhook_url = value;
-      }
-    },
-  });
-};
+// const getWebhookUrl = (index: number) => {
+//   return computed({
+//     get() {
+//       const action = props.botFunctions[index]?.actions?.find(
+//           (action: any) => action.name === 'send_webhook'
+//       );
+//       return action?.parameters?.webhook_url || '';
+//     },
+//     set(value: string) {
+//       // Ensure the actions array exists
+//       if (!props.botFunctions[index].actions) {
+//         props.botFunctions[index].actions = [];
+//       }
+//
+//       let action = props.botFunctions[index].actions.find(
+//           (action: any) => action.name === 'send_webhook'
+//       );
+//
+//       if (!action) {
+//         // Create the action if it doesn't exist
+//         action = { name: 'send_webhook', parameters: { webhook_url: value, webhook_text: '' } };
+//         props.botFunctions[index].actions.push(action);
+//       } else {
+//         // Update the existing action
+//         action.parameters.webhook_url = value;
+//       }
+//     },
+//   });
+// };
 
 // Webhook Text
-const getWebhookText = (index: number) => {
-  return computed({
-    get() {
-      const action = props.botFunctions[index]?.actions?.find(
-          (action: any) => action.name === 'send_webhook'
-      );
-      return action?.parameters?.webhook_text || '';
-    },
-    set(value: string) {
-      // Ensure the actions array exists
-      if (!props.botFunctions[index].actions) {
-        props.botFunctions[index].actions = [];
-      }
-
-      let action = props.botFunctions[index].actions.find(
-          (action: any) => action.name === 'send_webhook'
-      );
-
-      if (!action) {
-        // Create the action if it doesn't exist
-        action = { name: 'send_webhook', parameters: { webhook_url: '', webhook_text: value } };
-        props.botFunctions[index].actions.push(action);
-      } else {
-        // Update the existing action
-        action.parameters.webhook_text = value;
-      }
-    },
-  });
-};
+// const getWebhookText = (index: number) => {
+//   return computed({
+//     get() {
+//       const action = props.botFunctions[index]?.actions?.find(
+//           (action: any) => action.name === 'send_webhook'
+//       );
+//       return action?.parameters?.webhook_text || '';
+//     },
+//     set(value: string) {
+//       // Ensure the actions array exists
+//       if (!props.botFunctions[index].actions) {
+//         props.botFunctions[index].actions = [];
+//       }
+//
+//       let action = props.botFunctions[index].actions.find(
+//           (action: any) => action.name === 'send_webhook'
+//       );
+//
+//       if (!action) {
+//         // Create the action if it doesn't exist
+//         action = { name: 'send_webhook', parameters: { webhook_url: '', webhook_text: value } };
+//         props.botFunctions[index].actions.push(action);
+//       } else {
+//         // Update the existing action
+//         action.parameters.webhook_text = value;
+//       }
+//     },
+//   });
+// };
 
 // Computed properties for Custom API
 
@@ -845,6 +981,41 @@ const deleteCustomApiParameter = (
     action.parameters[paramType].splice(paramIndex, 1);
   }
 };
+
+// const sheetLink = ref<string>('');
+
+interface SheetList {
+  gridProperties: {
+    columnCount: number,
+    rowCount: number
+  },
+  index: number,
+  sheetId: number,
+  sheetType: string,
+  title: string
+}
+
+const sheetLists = ref<SheetList[]>([]);
+
+const connectSheet = async (sheetLink: string, functionIndex: number) => {
+  await googleSheetStore.getGoogleSheetLists(sheetLink).then((res) => {
+    sheetLists.value = res;
+    getGoogleSheetTabs(functionIndex).value = res.map(sheet => ({
+      gridProperties: sheet.gridProperties,
+      index: sheet.index,
+      sheetId: sheet.sheetId,
+      sheetType: sheet.sheetType,
+      title: sheet.title,
+    }));
+  })
+}
+
+const loadColumns = async (value: string, functionIndex: number) => {
+  await googleSheetStore.getGoogleSheetColumns(getGoogleSheetLink(functionIndex).value, value).then((res) => {
+    console.log(res);
+    getGoogleSheetColumns(functionIndex).value = res
+  })
+}
 
 </script>
 
@@ -1197,75 +1368,6 @@ const deleteCustomApiParameter = (
                     </div>
                   </div>
 
-
-<!--                  <div-->
-<!--                      v-for="(customField, customFieldIndex) in botFunction?.actions?.find(action => action.name === 'edit_crm_fields')?.parameters?.lead_fields?.custom_fields || []"-->
-<!--                      :key="customFieldIndex"-->
-<!--                      class="fields mt-3"-->
-<!--                  >-->
-<!--                    <div class="flex align-items-center gap-4">-->
-                      <!-- Выбрать поле -->
-<!--                      <div class="flex flex-column gap-2 w-full">-->
-<!--                        <label for="chooseField">{{ t('chooseField') }}</label>-->
-<!--                        <Dropdown-->
-<!--                            id="chooseField"-->
-<!--                            :model-value="getFieldId(index, customFieldIndex).value"-->
-<!--                            @update:model-value="getFieldId(index, customFieldIndex).value = $event"-->
-<!--                            :options="fields"-->
-<!--                            optionLabel="name"-->
-<!--                            optionGroupLabel="name"-->
-<!--                            optionGroupChildren="items"-->
-<!--                            :placeholder="t('chooseField')"-->
-<!--                        >-->
-<!--                          <template #optiongroup="slotProps">-->
-<!--                            <div class="flex align-items-center">-->
-<!--                              <div>{{ slotProps.option.name }}</div>-->
-<!--                            </div>-->
-<!--                          </template>-->
-<!--                        </Dropdown>-->
-<!--                      </div>-->
-
-<!--                      <div class="flex flex-column gap-2 w-full">-->
-<!--                        <label for="chooseField">{{ t('action') }}</label>-->
-<!--                        &lt;!&ndash; Adjusted Dropdown for Field Type &ndash;&gt;-->
-<!--                        <Dropdown-->
-<!--                            id="bodyParamAction"-->
-<!--                            :model-value="getFieldType(index, customFieldIndex).value"-->
-<!--                            @update:model-value="getFieldType(index, customFieldIndex).value = $event"-->
-<!--                            :options="parameterActions"-->
-<!--                            optionLabel="title"-->
-<!--                            optionValue="value"-->
-<!--                            :placeholder="t('action')"-->
-<!--                        ></Dropdown>-->
-<!--                      </div>-->
-
-<!--                      &lt;!&ndash; Ввести значение поля &ndash;&gt;-->
-<!--                      <div class="flex flex-column gap-2 w-full">-->
-<!--                        <label for="enterFieldValue">{{ t('enterFieldValue') }}</label>-->
-<!--                        <Dropdown-->
-<!--                            id="enterFieldValue"-->
-<!--                            editable-->
-<!--                            :options="botFunction.parameters"-->
-<!--                            optionLabel="name"-->
-<!--                            optionValue="name"-->
-<!--                            :model-value="getFieldValue(index, customFieldIndex).value"-->
-<!--                            @update:model-value="getFieldValue(index, customFieldIndex).value = $event"-->
-<!--                        ></Dropdown>-->
-<!--&lt;!&ndash;                        <InputText&ndash;&gt;-->
-<!--&lt;!&ndash;                            id="enterFieldValue"&ndash;&gt;-->
-<!--&lt;!&ndash;                            type="text"&ndash;&gt;-->
-<!--&lt;!&ndash;                            :model-value="getFieldValue(index, customFieldIndex).value"&ndash;&gt;-->
-<!--&lt;!&ndash;                            @update:model-value="getFieldValue(index, customFieldIndex).value = $event"&ndash;&gt;-->
-<!--&lt;!&ndash;                        />&ndash;&gt;-->
-<!--                      </div>-->
-<!--                      <i-->
-<!--                          class="pi pi-trash ml-auto"-->
-<!--                          style="cursor: pointer; color: #EE9186; font-size: 18px"-->
-<!--                          @click="deleteCustomFieldValue(index, customFieldIndex)"-->
-<!--                      ></i>-->
-<!--                    </div>-->
-<!--                  </div>-->
-
                   <!-- Кнопка для добавления нового поля -->
                   <Button
                       label="+"
@@ -1302,45 +1404,6 @@ const deleteCustomApiParameter = (
                   />
                 </div>
               </TabPanel>
-
-              <!-- Webhook Tab -->
-<!--              <TabPanel>-->
-<!--                <template #header>-->
-<!--                  <span-->
-<!--                      class="white-space-nowrap"-->
-<!--                      :class="{-->
-<!--                      'success-tab-title': botFunction?.actions?.some(-->
-<!--                        (item) =>-->
-<!--                          item?.name === 'send_webhook' &&-->
-<!--                          item?.parameters?.webhook_url &&-->
-<!--                          item?.parameters?.webhook_text-->
-<!--                      ),-->
-<!--                    }"-->
-<!--                  >-->
-<!--                    Webhook-->
-<!--                  </span>-->
-<!--                </template>-->
-<!--                <div class="flex flex-column gap-3">-->
-<!--                  <div class="flex flex-column gap-2 mt-5">-->
-<!--                    <span style="font-weight: 700">URL</span>-->
-<!--                    <InputText-->
-<!--                        style="margin-bottom: 8px"-->
-<!--                        id="webhookUrl"-->
-<!--                        type="text"-->
-<!--                        v-model="getWebhookUrl(index).value"-->
-<!--                        :placeholder="t('requestUrl')"-->
-<!--                    />-->
-<!--                  </div>-->
-<!--                  <div class="flex flex-column gap-2">-->
-<!--                    <span style="font-weight: 700">{{ t('text') }}</span>-->
-<!--                    <Textarea-->
-<!--                        rows="3"-->
-<!--                        cols="30"-->
-<!--                        v-model="getWebhookText(index).value"-->
-<!--                    />-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </TabPanel>-->
 
               <!-- CUSTOM API Tab -->
               <TabPanel>
@@ -1541,6 +1604,51 @@ const deleteCustomApiParameter = (
                           @click="addCustomApiParameter(index, 'bodyParams')"
                           :label="`+ ${t('newParameter')}`"
                       ></Button>
+                    </div>
+                  </div>
+                </div>
+              </TabPanel>
+
+              <!--Google Sheets Integration Tab -->
+              <TabPanel>
+                <template #header>
+                  <span>
+                    Google Sheets
+                  </span>
+                </template>
+                <div class="mt-3 p-2">
+                  <h5>Google Sheets</h5>
+                  <div class="flex flex-column gap-2">
+                    <span>Ссылка таблицы (Google Sheet)</span>
+                    <div class="flex flex-column gap-2">
+                      <InputText
+                          id="google-sheet-link"
+                          v-model="getGoogleSheetLink(index).value"
+                      ></InputText>
+                      <Button :label="t('toPlug')" @click="connectSheet(getGoogleSheetLink(index).value, index)"></Button>
+
+                      <div v-if="getGoogleSheetTabs(index)?.value?.length || sheetLists.length" class="flex flex-column gap-2 mt-3">
+                        <span>Лист</span>
+                        <Dropdown
+                            id="google-sheet-tab"
+                            v-model="getGoogleSheetTab(index).value"
+                            :options="getGoogleSheetTabs(index).value || sheetLists"
+                            optionLabel="title"
+                            optionValue="title"
+                            placeholder="Выберите лист"
+                            @change="loadColumns($event.value, index)"
+                        />
+                      </div>
+
+                      <div v-if="getGoogleSheetColumns(index)?.value?.length" class="flex flex-colum gap-2 mt-3">
+                        <span style="font-weight: 700">Колонки:</span>
+                        <div
+                            v-for="(column, index) in getGoogleSheetColumns(index).value"
+                            :key="index"
+                        >
+                          {{ column }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

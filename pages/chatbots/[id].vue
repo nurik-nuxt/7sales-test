@@ -832,7 +832,6 @@ const handleRemindersUpdate = (updatedReminders) => {
             </TabPanel>
 
             <TabPanel :header="`2.${t('prompt')}`">
-<!--              <Pre>{{ botFunctions }}</Pre>-->
               <BotGeneralPromt
                   :currentBot="currentBot"
                   :botFunctions="botFunctions"

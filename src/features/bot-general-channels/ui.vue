@@ -29,6 +29,8 @@ onMounted(async () => {
 const createChannel = () => {
   return navigateTo({ name: 'channels' })
 }
+const botFunctions = ref<any>([])
+
 
 const connectToBot = async (channelId: string) => {
   await channelStore.connectChannelToBot(channelId, <string>route.params.id).then(async () => {

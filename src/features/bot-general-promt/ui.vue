@@ -1619,7 +1619,7 @@ const loadColumns = async (value: string, functionIndex: number) => {
                 <div class="mt-3 p-2">
                   <h5>Google Sheets</h5>
                   <div class="flex flex-column gap-2">
-                    <span>Ссылка таблицы (Google Sheet)</span>
+                    <span>Ссылка на таблицу куда будут записаны данные (настройки доступа - все у кого есть ссылка "Редактор")</span>
                     <div class="flex flex-column gap-2">
                       <InputText
                           id="google-sheet-link"
@@ -1628,7 +1628,7 @@ const loadColumns = async (value: string, functionIndex: number) => {
                       <Button :label="t('toPlug')" @click="connectSheet(getGoogleSheetLink(index).value, index)"></Button>
 
                       <div v-if="getGoogleSheetTabs(index)?.value?.length || sheetLists.length" class="flex flex-column gap-2 mt-3">
-                        <span>Лист</span>
+                        <span>Выберите лист</span>
                         <Dropdown
                             id="google-sheet-tab"
                             v-model="getGoogleSheetTab(index).value"

@@ -45,7 +45,6 @@ const goToGoogleSheet = () => {
     <Button label="Google Sheet" @click="goToGoogleSheet"/>
   </div>
   <div class="table-container">
-<!--    <pre>{{ files }}</pre>-->
     <TreeTable v-model:selectionKeys="knowledgeBaseSelectedKey" :value="files" selectionMode="checkbox" tableStyle="min-width: 100rem">
       <template #header>
         <div class="text-left">
@@ -81,7 +80,7 @@ const goToGoogleSheet = () => {
         <template #body="slotProps">
           <div class="flex flex-row-reverse gap-3 ml-auto">
             <i style="cursor: pointer; color: #EE9186;" class="pi pi-trash" @click="deleteKnowledgeFile(slotProps?.node?.key)" />
-            <i style="cursor: pointer" class="pi pi-file-edit" @click="editKnowledgeFile(slotProps?.node?.key)" />
+            <i v-if="!slotProps?.node?.data?.isGoogleSheet" style="cursor: pointer" class="pi pi-file-edit" @click="editKnowledgeFile(slotProps?.node?.key)" />
             <i style="cursor: pointer; color: #187CF9" class="pi pi-download" />
           </div>
         </template>

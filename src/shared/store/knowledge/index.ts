@@ -53,7 +53,8 @@ export const useKnowledgeStore = defineStore('knowledge', {
                     data: {
                         label: item.name,
                         notification: true,
-                        active: true
+                        active: true,
+                        isGoogleSheet: item?.isGoogleSheet ? item?.isGoogleSheet : false
                     }
                 }));
                 return response;

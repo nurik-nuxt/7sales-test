@@ -186,15 +186,6 @@ const saveKnowledge = async () => {
       content: content.value
     }).then(async (res) => {
       if (res.success) {
-        // if (messages?.value?.length) {
-        //   const delay = {
-        //     parameters: {
-        //       timers: messages.value
-        //     },
-        //     name: 'delay'
-        //   }
-        //   actions.value.push(delay)
-        // }
         if (files.value.length) {
           files?.value?.forEach(file => {
             console.log(file)

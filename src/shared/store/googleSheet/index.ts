@@ -25,7 +25,7 @@ export const useGoogleSheetStore = defineStore('googleSheet', {
             }
         },
 
-        async getGoogleSheetColumns(googleSheetLink, listTitle) {
+        async getGoogleSheetColumns(googleSheetLink, listTitle, isParsed?: boolean = false) {
             try {
                 if (!googleSheetLink || !listTitle) {
                     console.error('Google Sheet URL or list title is missing');
@@ -35,7 +35,7 @@ export const useGoogleSheetStore = defineStore('googleSheet', {
                 const encodedUrl = encodeURIComponent(googleSheetLink);
                 const encodedTitle = encodeURIComponent(listTitle);
 
-                const response = await useApi(`/googleSheets/getSheetColumns?url=${encodedUrl}&listTitle=${encodedTitle}`, {
+                const response = await useApi(`/googleSheets/getSheetColumns?url=${encodedUrl}&listTitle=${encodedTitle}&isParsed=${isParsed}`, {
                     method: 'GET',
                 });
 
@@ -44,9 +44,14 @@ export const useGoogleSheetStore = defineStore('googleSheet', {
                     return;
                 }
 
-                if (response.columns?.length) {
-                    return response.columns
+                if (isParsed && response.columns?.length) {
+                    return response
+                } else {
+                    if (response.columns?.length) {
+                        return response.columns
+                    }
                 }
+
             } catch (error) {
                 console.error('Error fetching Google Sheet columns:', error);
             }

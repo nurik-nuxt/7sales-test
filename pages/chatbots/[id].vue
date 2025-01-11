@@ -677,7 +677,6 @@ const confirmRemoveBot = async () => {
   })
 }
 
-const webhookUrl = ref<string>('')
 
 const botFunctions = ref<any>([])
 

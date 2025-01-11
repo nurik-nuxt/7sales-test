@@ -105,7 +105,7 @@ const basicTariffSum = computed(() => {
   if (totalTariffTime.value === 'per_month') {
     return basicPlans.value?.find((item) => item?.limits?.leads === basicClientCount.value)?.prices?.[`${currencyValue.value}`]?.price_per_month
   } else {
-    return basicClientCountList.value?.find((item) => item.value === basicClientCount.value)?.prices?.[`${currencyValue.value}`]?.price_per_year
+    return basicPlans.value?.find((item) => item?.limits?.leads === basicClientCount.value)?.prices?.[`${currencyValue.value}`]?.price_per_year
   }
 })
 const proClientCount = ref<number>(20000)

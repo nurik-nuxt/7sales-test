@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { useKnowledgeStore } from "~/src/shared/store/knowledge";
+import {navigateTo} from "#imports";
 const { t } = useI18n();
 const route = useRoute();
 
@@ -30,6 +31,10 @@ const editKnowledgeFile = (knowledgeId: string) => {
   return navigateTo({ name: 'chatbots-knowledge-edit-id', params: { id: route.params.id }, query: { knowledgeId: knowledgeId }})
 }
 
+const goToGoogleSheet = () => {
+  return navigateTo({ name: 'chatbots-knowledge-google-sheet-id-create', params: { id: route.params.id } })
+}
+
 </script>
 
 <template>
@@ -37,8 +42,10 @@ const editKnowledgeFile = (knowledgeId: string) => {
     <Button :label="t('createFile')" @click="createKnowledgeBase(route.params.id)"/>
     <Button :label="t('uploadFail')"/>
     <Button :label="t('delete')" :disabled="!knowledgeBaseSelectedKey" />
+    <Button label="Google Sheet" @click="goToGoogleSheet"/>
   </div>
   <div class="table-container">
+<!--    <pre>{{ files }}</pre>-->
     <TreeTable v-model:selectionKeys="knowledgeBaseSelectedKey" :value="files" selectionMode="checkbox" tableStyle="min-width: 100rem">
       <template #header>
         <div class="text-left">

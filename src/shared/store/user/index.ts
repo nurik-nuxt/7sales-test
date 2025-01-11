@@ -90,7 +90,7 @@ export const useUserStore = defineStore('user', {
                     method: 'POST',
                     body: {
                         amount,
-                        currency
+                        currency: currency === 'usd' ? 'rub' : currency
                     }
                 })
                 if (response?.success) {

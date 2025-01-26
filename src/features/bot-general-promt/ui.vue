@@ -591,6 +591,183 @@ const getGoogleSheetLink = (index: number) => {
   });
 };
 
+// Google Calendar Identifier
+const getGoogleCalendarIdentifier = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+      return action?.parameters?.identifier || ''; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+
+      if (!action) {
+        action = { name: 'google_calendar', parameters: { identifier: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.identifier = value;
+      }
+    },
+  });
+};
+
+// Google Calendar Duration
+const getGoogleCalendarDuration = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+      return action?.parameters?.duration || ''; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+
+      if (!action) {
+        action = { name: 'google_calendar', parameters: { duration: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.duration = value;
+      }
+    },
+  });
+};
+
+// Google Calendar Show Available Slots
+const showAvailableSlots = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+      return action?.parameters?.available_slots || false; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+
+      if (!action) {
+        action = { name: 'google_calendar', parameters: { available_slots: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.available_slots = value;
+      }
+    },
+  });
+};
+
+// Google Calendar Start and End
+const getGoogleCalendarStartTime = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+      return action?.parameters?.start || ''; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+
+      if (!action) {
+        action = { name: 'google_calendar', parameters: { start: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.start = value;
+      }
+    },
+  });
+};
+const getGoogleCalendarEndTime = (index: number) => {
+  return computed({
+    get() {
+      if (!props.botFunctions[index]) {
+        return ''; // Return a default value if the bot function does not exist
+      }
+
+      const action = props.botFunctions[index]?.actions?.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+      return action?.parameters?.end || ''; // Return an empty string if no link is found
+    },
+    set(value: string) {
+      if (!props.botFunctions[index]) {
+        return; // Safely exit if the bot function does not exist
+      }
+
+      if (!props.botFunctions[index].actions) {
+        props.botFunctions[index].actions = [];
+      }
+
+      let action = props.botFunctions[index].actions.find(
+          (action: any) => action.name === 'google_calendar'
+      );
+
+      if (!action) {
+        action = { name: 'google_calendar', parameters: { end: value } };
+        props.botFunctions[index].actions.push(action);
+      } else {
+        action.parameters.end = value;
+      }
+    },
+  });
+};
 // Google Sheet Tab
 const getGoogleSheetTab = (index: number) => {
   return computed({
@@ -1648,6 +1825,52 @@ const loadColumns = async (value: string, functionIndex: number) => {
                         >
                           {{ column }}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabPanel>
+
+              <TabPanel>
+                <template #header>
+                  <span>
+                    Google Calendar
+                  </span>
+                </template>
+                <div class="mt-3 p-2">
+                  <h5>Google Calendar</h5>
+                  <div class="flex flex-column gap-3">
+                    <div class="flex flex-column gap-2">
+                      <span>Идентификатор календаря</span>
+                      <div class="flex flex-column gap-2">
+                        <InputText
+                            id="google-sheet-link"
+                            v-model="getGoogleCalendarIdentifier(index).value"
+                        ></InputText>
+                      </div>
+                    </div>
+                    <div class="flex flex-column gap-2">
+                      <span>Продолжительность мероприятия</span>
+                      <div class="flex flex-column gap-2">
+                        <InputNumber
+                            id="google-sheet-link"
+                            min="15"
+                            v-model="getGoogleCalendarDuration(index).value"
+                        ></InputNumber>
+                      </div>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                      <span>Показать доступные слоты</span>
+                      <InputSwitch v-model="showAvailableSlots(index).value" style="margin-left: 4px"/>
+                    </div>
+                    <div v-if="showAvailableSlots(index).value" class="flex align-items-center gap-3">
+                      <div class="flex flex-column gap-1">
+                        <span>Начало:</span>
+                        <InputText id="calendar-timeonly" v-model="getGoogleCalendarStartTime(index).value" />
+                      </div>
+                      <div class="flex flex-column gap-1">
+                        <span>Конец:</span>
+                        <InputText id="calendar-timeonly" v-model="getGoogleCalendarEndTime(index).value" />
                       </div>
                     </div>
                   </div>

@@ -61,7 +61,7 @@ const login = async () => {
         toast.add({ severity: 'error', summary: 'Ошибка', detail: response?.advice, life: 5000 })
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 }
@@ -87,7 +87,7 @@ definePageMeta({
             <span class="text-600 font-medium">{{ $t('logInToContinue') }}</span>
           </div>
 
-          <div>
+          <form @submit.prevent="login"> <!-- Added form wrapper -->
             <div class="mb-5">
               <label for="email1" class="block text-900 text-xl font-medium mb-2">{{ $t('email') }}</label>
               <InputText id="email1" type="text" :placeholder="t('emailAddress')" class="w-full md:w-30rem mb-1" style="padding: 1rem" v-model="form.email" :invalid="v$.$errors.find((el) => el.$property === 'email')?.$message" />
@@ -107,11 +107,11 @@ definePageMeta({
               </div>
               <nuxt-link to="/reset-password" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">{{ $t('forgotPassword') }}?</nuxt-link>
             </div>
-            <Button :label="t('login')" class="w-full p-3 text-xl mb-3" @click="login"></Button>
+            <Button type="submit" :label="t('login')" class="w-full p-3 text-xl mb-3"></Button> <!-- Set type to submit -->
             <div class="flex justify-content-center">
               <nuxt-link to="/registration" style="color: #076AE1; font-weight: 700">{{ $t('registerButton') }}</nuxt-link>
             </div>
-          </div>
+          </form> <!-- Close form wrapper -->
         </div>
       </div>
     </div>

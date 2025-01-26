@@ -19,6 +19,7 @@
         </div>
         <div class="flex flex-column gap-3 mt-3">
           <div v-if="sheetLists.length" class="flex align-items-center gap-3">
+<!--          <div class="flex align-items-center gap-3">-->
             <div class="flex flex-column gap-2">
               <span>Лист</span>
               <Dropdown
@@ -33,11 +34,13 @@
             </div>
             <div class="flex flex-column gap-2">
               <span>Частота обновления данных (мин)</span>
-              <InputNumber
-                  min="1"
+              <Dropdown
                   id="update-time"
                   v-model="timerUpdate"
-              ></InputNumber>
+                  :options="durations"
+                  option-label="title"
+                  option-value="value"
+              ></Dropdown>
             </div>
           </div>
           <div v-if="columns.length" class="flex flex-colum gap-2 mt-3">
@@ -81,6 +84,25 @@ interface SheetList {
   title: string
 }
 
+const durations = ref<{ title: string, value: number}[]>([
+  {
+    title: '15 мин',
+    value: 15,
+  },
+  {
+    title: '1 час',
+    value: 60,
+  },
+  {
+    title: '6 часа',
+    value: 360,
+  },
+  {
+    title: '24 часа',
+    value: 1440,
+  },
+])
+
 const sheetLists = ref<SheetList[]>([]);
 
 const columns = ref<string[]>([])
@@ -96,7 +118,7 @@ const loadColumns = async () => {
 }
 
 
-const timerUpdate = ref<number>(1)
+const timerUpdate = ref<number>(0)
 
 const connectGoogleSheet = async () => {
   await googleSheetStore.getGoogleSheetLists(googleSheetLink.value, true).then((res) => {

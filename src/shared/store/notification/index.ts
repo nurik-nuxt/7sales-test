@@ -4,12 +4,14 @@ export const useNotificationStore = defineStore('notification', {
 
     state: () => {
         return {
-            notifications: [] as any
+            notifications: [] as any,
+            telegramNotificationAccounts: [] as any
         }
     },
 
     getters: {
-        getNotifications: (state) => state.notifications
+        getNotifications: (state) => state.notifications,
+        getTelegramNotificationAccounts: (state) => state.telegramNotificationAccounts,
     },
 
     actions: {
@@ -38,6 +40,67 @@ export const useNotificationStore = defineStore('notification', {
             } catch (e) {
                 console.error(e)
             }
-        }
+        },
+
+        async getUsersForNotification() {
+            try {
+                const response = await useApi(`/telegram/accounts-for-notification`, {
+                    method: 'GET'
+                })
+                if (response?.success) {
+                    this.telegramNotificationAccounts = response?.accounts
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        },
+
+        async unsubscribeTelegramAccount(chatId: number) {
+            try {
+                const response = await useApi(`/telegram/unsubscribe`, {
+                    method: 'POST',
+                    body: {
+                        chat_id: chatId
+                    }
+                })
+                if (response) {
+                    return response?.success
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        },
+
+        async subscribeTelegramAccount(chatId: number) {
+            try {
+                const response = await useApi(`/telegram/subscribe`, {
+                    method: 'POST',
+                    body: {
+                        chat_id: chatId
+                    }
+                })
+                if (response) {
+                    return response?.success
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        },
+
+        async deleteTelegramAccount(chatId: number) {
+            try {
+                const response = await useApi(`/telegram/delete`, {
+                    method: 'DELETE',
+                    body: {
+                        chat_id: chatId
+                    }
+                })
+                if (response) {
+                    return response?.success
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        },
     }
 })

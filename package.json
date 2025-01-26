@@ -22,6 +22,7 @@
     "@vuelidate/validators": "^2.0.0",
     "@vueuse/core": "^11.3.0",
     "chart.js": "3.3.2",
+    "dayjs": "^1.11.13",
     "engine.io": "^6.5.4",
     "js-cookie": "^3.0.5",
     "nuxt": "^3.11.2",

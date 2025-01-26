@@ -97,7 +97,8 @@ definePageMeta({
             <span class="text-600 font-medium">{{ $t('createAccount') }}</span>
           </div>
 
-          <div>
+          <!-- Form wrapper -->
+          <form @submit.prevent="signIn">
             <div class="mb-5">
               <label for="name" class="block text-900 text-xl font-medium mb-2">{{ $t('name') }}</label>
               <InputText id="name" type="text" :placeholder="t('name')" class="w-full md:w-30rem mb-1" style="padding: 1rem" v-model="form.name" :invalid="v$.$errors.find((el) => el.$property === 'name')?.$message" />
@@ -111,8 +112,8 @@ definePageMeta({
             </div>
 
             <div class="mb-5">
-              <label for="email1" class="block text-900 text-xl font-medium mb-2">{{ $t('phone') }}</label>
-              <InputMask mask="+9 (999) 999-99-99" id="email1" type="tel" :placeholder="t('phone')" class="w-full md:w-30rem mb-1" style="padding: 1rem" v-model="form.phone" :invalid="v$.$errors.find((el) => el.$property === 'phone')?.$message" />
+              <label for="phone" class="block text-900 text-xl font-medium mb-2">{{ $t('phone') }}</label>
+              <InputMask mask="+9 (999) 999-99-99" id="phone" type="tel" :placeholder="t('phone')" class="w-full md:w-30rem mb-1" style="padding: 1rem" v-model="form.phone" :invalid="v$.$errors.find((el) => el.$property === 'phone')?.$message" />
               <span class="mt-1" style="color: #f87171;">{{ v$.$errors.find((el) => el.$property === 'phone')?.$message }}</span>
             </div>
 
@@ -124,18 +125,20 @@ definePageMeta({
 
             <div class="flex align-items-center justify-content-between mb-5 gap-5">
               <div class="flex align-items-center justify-content-center text-center">
-                  <nuxt-link to="/login" class="text-center" style="color: #076AE1; font-weight: 700">{{ $t('login') }}</nuxt-link>
+                <nuxt-link to="/login" class="text-center" style="color: #076AE1; font-weight: 700">{{ $t('login') }}</nuxt-link>
               </div>
             </div>
-            <Button :label="t('registerButton')" class="w-full p-3 text-xl mb-3" @click="signIn"></Button>
-            <div>
-              <span class="text-600 text-center font-medium">
-                {{ $t('loginDescription') }}
-                <a href="https://7sales.ai/info" target="_blank">{{ $t('termsOfService') }}</a>
-                {{ $t('and') }}
-                <a href="https://7sales.ai/privacypolicy" target="_blank">{{ $t('privacyPolicy') }}</a>
-                </span>
-            </div>
+            <Button type="submit" :label="t('registerButton')" class="w-full p-3 text-xl mb-3"></Button>
+          </form>
+          <!-- End form wrapper -->
+
+          <div>
+            <span class="text-600 text-center font-medium">
+              {{ $t('loginDescription') }}
+              <a href="https://7sales.ai/info" target="_blank">{{ $t('termsOfService') }}</a>
+              {{ $t('and') }}
+              <a href="https://7sales.ai/privacypolicy" target="_blank">{{ $t('privacyPolicy') }}</a>
+            </span>
           </div>
         </div>
       </div>
